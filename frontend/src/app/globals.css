@@ -1,0 +1,178 @@
+/* AML Monitor — Global Styles (Dark Theme) */
+
+:root {
+  /* Brand Colors */
+  --brand-bg: #F37021;
+  --brand-accent: #1A1A1A;
+
+  /* Primary */
+  --primary: #A43820;
+  --primary-dark: #802b19;
+  --primary-light: #c75a43;
+
+  /* Semantic */
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --success: #16a34a;
+
+  /* Gray Scale (Dark) */
+  --gray-50: #1f2937;
+  --gray-100: #1A1A1A;
+  --gray-200: #4b5563;
+  --gray-300: #6b7280;
+  --gray-400: #9ca3af;
+  --gray-500: #d1d5db;
+  --gray-600: #e5e7eb;
+  --gray-700: #f3f4f6;
+  --gray-800: #f9fafb;
+  --gray-900: #1A1A1A;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-800);
+  background-color: var(--brand-bg);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-900);
+}
+
+.badge-low {
+  background-color: #1e40af;
+  color: #dbeafe;
+}
+
+.badge-medium {
+  background-color: #92400e;
+  color: #fef3c7;
+}
+
+.badge-high {
+  background-color: #b91c1c;
+  color: #fee2e2;
+}
+
+.badge-critical {
+  background-color: #831843;
+  color: #fce7f3;
+}
+
+/* Header */
+header {
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+header p {
+  color: var(--gray-900);
+  margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--gray-900);
+  color: var(--gray-900);
+  font-size: 0.875rem;
+}
+
+/* Status indicators */
+.status-ok {
+  color: var(--success);
+}
+
+.status-degraded {
+  color: var(--warning);
+}
+
+.status-error {
+  color: var(--danger);
+}
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--grey-800);
+  color: var(--gray-700);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--gray-900);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--gray-200);
+  color: var(--gray-700);
+}
+
+.btn-secondary:hover {
+  background: var(--gray-300);
+}

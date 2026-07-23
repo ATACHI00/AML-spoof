@@ -1,0 +1,88 @@
+"""Seed default ML anomaly detection rule.
+
+Revision ID: 0004
+Revises: 0003
+Create Date: 2026-07-22 23:25:00.000000
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from decimal import Decimal
+from typing import Sequence
+from uuid import uuid4
+
+import sqlalchemy as sa
+from alembic import op
+
+# revision identifiers, used by Alembic.
+revision: str = "0004"
+down_revision: str | None = "0003"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
+
+# ---------------------------------------------------------------------------
+# New rule data
+# ---------------------------------------------------------------------------
+
+ML_RULE = {
+    "id": str(uuid4()),
+    "name": "ML Anomaly Detection",
+    "slug": "ml_anomaly",
+    "description": (
+        "Uses Isolation Forest ML model to detect anomalies in transactions. "
+        "Scores transactions based on multiple features and flags those with "
+        "anomaly scores above the configured threshold."
+    ),
+    "detector_type": "ml_anomaly",
+    "config": {
+        "threshold": 0.5,
+        "min_risk_score": 20.0,
+    },
+    "weight": Decimal("1.50"),
+    "is_active": True,
+}
+
+
+def upgrade() -> None:
+    """Insert the ML anomaly detection rule."""
+    now = datetime.now(timezone.utc)
+
+    rules_table = sa.table(
+        "rules",
+        sa.column("id", sa.String(36)),
+        sa.column("name", sa.String(255)),
+        sa.column("slug", sa.String(128)),
+        sa.column("description", sa.Text),
+        sa.column("detector_type", sa.String(64)),
+        sa.column("config", sa.JSON),
+        sa.column("weight", sa.Numeric(5, 2)),
+        sa.column("is_active", sa.Boolean),
+        sa.column("created_at", sa.DateTime(timezone=True)),
+        sa.column("updated_at", sa.DateTime(timezone=True)),
+    )
+
+    op.bulk_insert(
+        rules_table,
+        [
+            {
+                "id": ML_RULE["id"],
+                "name": ML_RULE["name"],
+                "slug": ML_RULE["slug"],
+                "description": ML_RULE["description"],
+                "detector_type": ML_RULE["detector_type"],
+                "config": ML_RULE["config"],
+                "weight": ML_RULE["weight"],
+                "is_active": ML_RULE["is_active"],
+                "created_at": now,
+                "updated_at": now,
+            }
+        ],
+    )
+
+
+def downgrade() -> None:
+    """Remove the ML anomaly detection rule."""
+    op.execute(
+        sa.text("DELETE FROM rules WHERE slug = 'ml_anomaly'")
+    )

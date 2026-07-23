@@ -1,0 +1,92 @@
+"""Seed default graph anomaly detection rule.
+
+Revision ID: 0005
+Revises: 0004
+Create Date: 2026-07-23 00:20:00.000000
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from decimal import Decimal
+from typing import Sequence
+from uuid import uuid4
+
+import sqlalchemy as sa
+from alembic import op
+
+# revision identifiers, used by Alembic.
+revision: str = "0005_seed_graph_rule"
+down_revision: str | None = "0004"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
+
+# ---------------------------------------------------------------------------
+# New rule data
+# ---------------------------------------------------------------------------
+
+GRAPH_RULE = {
+    "id": str(uuid4()),
+    "name": "Graph Anomaly Detection",
+    "slug": "graph_anomaly",
+    "description": (
+        "Analyses the transaction graph to detect suspicious patterns: "
+        "funds cycling through multiple accounts (layering) and "
+        "highly interconnected clusters indicative of organised "
+        "money laundering networks."
+    ),
+    "detector_type": "graph_anomaly",
+    "config": {
+        "hours_lookback": 72,
+        "max_cycle_length": 6,
+        "min_cycle_volume": 50000.0,
+        "min_cluster_size": 3,
+        "min_cluster_volume": 50000.0,
+    },
+    "weight": Decimal("1.50"),
+    "is_active": True,
+}
+
+
+def upgrade() -> None:
+    """Insert the graph_anomaly rule."""
+    now = datetime.now(timezone.utc)
+
+    rules_table = sa.table(
+        "rules",
+        sa.column("id", sa.String(36)),
+        sa.column("name", sa.String(255)),
+        sa.column("slug", sa.String(128)),
+        sa.column("description", sa.Text),
+        sa.column("detector_type", sa.String(64)),
+        sa.column("config", sa.JSON),
+        sa.column("weight", sa.Numeric(5, 2)),
+        sa.column("is_active", sa.Boolean),
+        sa.column("created_at", sa.DateTime(timezone=True)),
+        sa.column("updated_at", sa.DateTime(timezone=True)),
+    )
+
+    op.bulk_insert(
+        rules_table,
+        [
+            {
+                "id": GRAPH_RULE["id"],
+                "name": GRAPH_RULE["name"],
+                "slug": GRAPH_RULE["slug"],
+                "description": GRAPH_RULE["description"],
+                "detector_type": GRAPH_RULE["detector_type"],
+                "config": GRAPH_RULE["config"],
+                "weight": GRAPH_RULE["weight"],
+                "is_active": GRAPH_RULE["is_active"],
+                "created_at": now,
+                "updated_at": now,
+            }
+        ],
+    )
+
+
+def downgrade() -> None:
+    """Remove the graph_anomaly rule."""
+    op.execute(
+        sa.text("DELETE FROM rules WHERE slug = 'graph_anomaly'")
+    )
